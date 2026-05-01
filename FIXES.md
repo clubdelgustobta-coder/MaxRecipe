@@ -534,6 +534,43 @@ _Descripción de la receta..._
 
 ---
 
+## FIX 35 — Firebase proyecto separado + Firestore + Panel Admin
+
+**Contexto:** Se creó un proyecto Firebase dedicado `Recetario-Max` (separado de `ClubApp-Vsc`) para aislar los usuarios de la app de recetario de otras aplicaciones del mismo Firestore.
+
+**Firebase Console — configuración:**
+- Proyecto: `Recetario-Max` (Plan Spark)
+- Authentication: Email/Contraseña habilitado
+- Firestore: creado en región `southamerica-east1`
+- Dominio autorizado: `clubdelgusto-recetario.vercel.app`
+- Reglas Firestore: cada usuario lee/escribe solo su doc; admin lee todos
+
+**Archivos creados:**
+- `src/services/firestoreService.js` — `saveUserLogin()`, `getAllUsers()`
+- `src/screens/AdminScreen.js` — panel admin con lista de usuarios y fecha de último ingreso
+
+**Archivos modificados:**
+- `src/services/firebaseService.js` — `login()` llama `saveUserLogin()` al autenticar; auth platform-aware (AsyncStorage en mobile, localStorage en web)
+- `src/screens/RecipeListScreen.js` — botón ⚙️ visible solo para el admin (detectado por UID)
+- `src/config/appConfig.js` — `ADMIN_UID` para detección de admin
+- `App.js` — pantalla `Admin` agregada al Stack Navigator; timeout 5s si Firebase no responde
+- `.env` — credenciales actualizadas al nuevo proyecto `Recetario-Max`
+
+**Flujo Admin:**
+1. Admin hace login → `saveUserLogin()` escribe `{ email, lastLogin }` en Firestore `users/{uid}`
+2. Ícono ⚙️ aparece en header solo para el UID admin
+3. AdminScreen lista todos los usuarios con email y fecha de último ingreso
+4. Nuevos usuarios se agregan manualmente desde Firebase Console → Authentication → Users
+
+**Build APK local (sin Play Store):**
+- El proyecto ya tiene `android/` generado con `debug.keystore` configurado para release
+- Comando: `cd android && .\gradlew.bat assembleRelease --warning-mode all`
+- APK output: `android/app/build/outputs/apk/release/app-release.apk`
+- Se comparte directamente por WhatsApp/Drive (instalar desde fuentes desconocidas en Android)
+- No requiere cuenta Expo ni EAS CLI
+
+---
+
 ## Configuración final app.json relevante
 ```json
 {

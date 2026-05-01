@@ -10,6 +10,7 @@ import RecipeDetailScreen from './src/screens/RecipeDetailScreen';
 import ReviewScreen from './src/screens/ReviewScreen';
 import ChefScreen from './src/screens/ChefScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import AdminScreen from './src/screens/AdminScreen';
 import { onAuthChange } from './src/services/firebaseService';
 import { APP_URL } from './src/config/appConfig';
 
@@ -118,6 +119,7 @@ export default function App() {
                             <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />
                             <Stack.Screen name="Review" component={ReviewScreen} />
                             <Stack.Screen name="Chef" component={ChefScreen} />
+                            <Stack.Screen name="Admin" component={AdminScreen} />
                         </Stack.Navigator>
                     </NavigationContainer>
                 )}

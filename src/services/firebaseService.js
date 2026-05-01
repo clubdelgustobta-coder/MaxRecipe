@@ -28,6 +28,8 @@ export const auth = Platform.OS === 'web'
 
 export async function login(email, password) {
     const credential = await signInWithEmailAndPassword(auth, email, password);
+    const { saveUserLogin } = await import('./firestoreService');
+    await saveUserLogin(credential.user);
     return credential.user;
 }
 

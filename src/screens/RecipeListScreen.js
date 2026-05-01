@@ -9,7 +9,8 @@ import { SALSA_COLORS, INGREDIENTE_COLORS } from '../data/recipes';
 import { useRecipes } from '../context/RecipesContext';
 import { getFlaggedIds } from '../services/flagService';
 import DriveImage from '../components/DriveImage';
-import { logout } from '../services/firebaseService';
+import { logout, auth } from '../services/firebaseService';
+import { ADMIN_UID } from '../config/appConfig';
 
 // Familias fijas — incluye las futuras aunque aún no tengan recetas
 const CATEGORY_OPTIONS = ['Todas', 'Pasta', 'Pasta Rellena', 'Cannelloni', 'Lasagna', 'Risotto'];
@@ -133,6 +134,11 @@ export default function RecipeListScreen({ navigation }) {
                         <Text style={styles.headerSub}>Recetario Personal · {filtered.length} recetas</Text>
                     </View>
                     <View style={styles.headerButtons}>
+                        {auth.currentUser?.uid === ADMIN_UID && (
+                            <TouchableOpacity style={styles.exitBtn} onPress={() => navigation.navigate('Admin')}>
+                                <Text style={styles.exitText}>⚙️</Text>
+                            </TouchableOpacity>
+                        )}
                         <TouchableOpacity style={styles.exitBtn} onPress={() => navigation.navigate('Chef')}>
                             <Text style={styles.chefBtnText}>👨‍🍳</Text>
                         </TouchableOpacity>

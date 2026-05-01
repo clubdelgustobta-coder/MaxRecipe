@@ -8,7 +8,25 @@ Firebase Auth implementado con email + contraseña. Flujo de solicitud de acceso
 
 ---
 
-## PENDIENTE 02 — Ideas de mejora UX y contenido
+## PENDIENTE 02 — Panel de Administración (plan por fases)
+
+### Fase 1 — Sin plan Blaze (implementar ahora)
+- **Pantalla Admin** — visible solo para el administrador (detectado por UID)
+- **Lista de usuarios activos** — leída desde Firestore colección `users`
+- **Último ingreso** — fecha/hora del último login de cada usuario
+- **Primer ingreso** — fecha de alta en la app
+- Firestore se actualiza automáticamente en cada login del usuario
+
+### Fase 2 — Con plan Blaze + Cloud Functions (futuro)
+- **Crear usuario** desde la app (sin pasar por Firebase Console)
+- **Deshabilitar usuario** — bloquear acceso con un tap
+- **Eliminar usuario** — borrar cuenta definitivamente
+- **Ver solicitudes pendientes** — lista de quienes pidieron acceso por WhatsApp
+- Requiere: cambiar proyecto `Recetario-Max` a plan Blaze + deploy de Cloud Functions
+
+---
+
+## PENDIENTE 03 — Ideas de mejora UX y contenido
 
 ### Contenido enriquecido
 - **Fotos de proceso** — imágenes de los pasos de preparación, no solo el plato final

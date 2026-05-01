@@ -110,13 +110,13 @@ export default function LoginScreen() {
                     <>
                         <View style={styles.divider}>
                             <View style={styles.dividerLine} />
-                            <Text style={styles.dividerText}>¿No tenés acceso?</Text>
+                            <Text style={styles.dividerText}>¿No tenés acceso? Escribí tu email arriba</Text>
                             <View style={styles.dividerLine} />
                         </View>
                         <TouchableOpacity
-                            style={[styles.whatsappBtn, !ADMIN_WHATSAPP && styles.btnDisabled]}
+                            style={[styles.whatsappBtn, (!ADMIN_WHATSAPP || !email.trim()) && styles.btnDisabled]}
                             onPress={handleRequestAccess}
-                            disabled={!ADMIN_WHATSAPP}
+                            disabled={!ADMIN_WHATSAPP || !email.trim()}
                         >
                             <Text style={styles.whatsappBtnText}>💬  Solicitar acceso por WhatsApp</Text>
                         </TouchableOpacity>
