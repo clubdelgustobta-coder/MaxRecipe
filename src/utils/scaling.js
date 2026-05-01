@@ -1,4 +1,4 @@
-export const BASE_PORTIONS = 4;
+export const BASE_PORTIONS = 2;
 
 export function scaleIngredient(text, portions) {
     if (portions === BASE_PORTIONS) return text;
