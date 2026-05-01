@@ -7,21 +7,27 @@ import { SALSA_COLORS } from '../data/recipes';
 import { useRecipes } from '../context/RecipesContext';
 import { getFlaggedIds, toggleFlagged } from '../services/flagService';
 import DriveImage, { getDriveImageSize } from '../components/DriveImage';
+import { shareRecipeOnWhatsApp } from '../utils/share';
 
 const INGR_LINE_H = 28; // altura por línea de ingrediente (fontSize 14 + marginBottom 8)
 const MAX_INGR_LINES = 9;
 const INGR_AREA_H = INGR_LINE_H * MAX_INGR_LINES; // 252px — altura fija del bloque
 
 export default function RecipeDetailWeb({ route, navigation }) {
-    const { startIndex = 0, recipeIds } = route.params;
+    const { startIndex = 0, recipeIds, code } = route.params ?? {};
     const { recipes: allRecipes } = useRecipes();
-    const [currentIndex, setCurrentIndex] = useState(startIndex);
-    const [flaggedIds, setFlaggedIds] = useState(new Set());
-    const [imgRatio, setImgRatio] = useState(4 / 3);
 
     const recipes = recipeIds
         ? recipeIds.map(id => allRecipes.find(r => r.id === id)).filter(Boolean)
         : allRecipes;
+
+    const resolvedIndex = code
+        ? Math.max(0, recipes.findIndex(r => r.code === code))
+        : startIndex;
+
+    const [currentIndex, setCurrentIndex] = useState(resolvedIndex);
+    const [flaggedIds, setFlaggedIds] = useState(new Set());
+    const [imgRatio, setImgRatio] = useState(4 / 3);
 
     const recipe = recipes[currentIndex];
     const isFlagged = recipe ? flaggedIds.has(recipe.id) : false;
@@ -80,6 +86,13 @@ export default function RecipeDetailWeb({ route, navigation }) {
                         disabled={currentIndex === 0}
                     >
                         <Text style={styles.headerBtnText}>← Anterior</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.whatsappBtn}
+                        onPress={() => shareRecipeOnWhatsApp(recipe)}
+                    >
+                        <Text style={styles.whatsappIcon}>📲</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -216,6 +229,14 @@ const styles = StyleSheet.create({
     },
     flagBtnActive: { backgroundColor: '#2a2000', borderColor: '#FFD700' },
     flagIcon: { fontSize: 20, color: '#FFD700' },
+    whatsappBtn: {
+        backgroundColor: '#25D366',
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        justifyContent: 'center', alignItems: 'center',
+    },
+    whatsappIcon: { fontSize: 16 },
 
     // Layout
     body: { flex: 1, flexDirection: 'row' },

@@ -9,6 +9,19 @@ import RecipeListScreen from './src/screens/RecipeListScreen';
 import RecipeDetailScreen from './src/screens/RecipeDetailScreen';
 import ReviewScreen from './src/screens/ReviewScreen';
 import ChefScreen from './src/screens/ChefScreen';
+import { APP_URL } from './src/config/appConfig';
+
+const linking = {
+    prefixes: [APP_URL, 'http://localhost:8081'],
+    config: {
+        screens: {
+            RecipeList: '',
+            RecipeDetail: 'recipe/:code',
+            Review: 'preferencias',
+            Chef: 'chef',
+        },
+    },
+};
 
 const Stack = createNativeStackNavigator();
 
@@ -70,7 +83,7 @@ export default function App() {
             <RecipesProvider onReady={onDataReady}>
                 {!splashDone && <SplashScreen onFinish={onSplashTimerDone} />}
                 {splashDone && (
-                    <NavigationContainer>
+                    <NavigationContainer linking={linking}>
                         <Stack.Navigator screenOptions={{ headerShown: false }}>
                             <Stack.Screen name="RecipeList" component={RecipeListScreen} />
                             <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />

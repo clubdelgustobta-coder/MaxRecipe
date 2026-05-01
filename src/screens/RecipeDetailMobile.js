@@ -8,6 +8,7 @@ import { SALSA_COLORS, INGREDIENTE_COLORS } from '../data/recipes';
 import { useRecipes } from '../context/RecipesContext';
 import { getFlaggedIds, toggleFlagged } from '../services/flagService';
 import DriveImage, { getDriveImageSize } from '../components/DriveImage';
+import { shareRecipeOnWhatsApp } from '../utils/share';
 
 const RecipeCard = React.memo(function RecipeCard({ recipe, width }) {
     const salsaColor = SALSA_COLORS[recipe.salsa] || '#888';
@@ -87,10 +88,9 @@ const RecipeCard = React.memo(function RecipeCard({ recipe, width }) {
 });
 
 export default function RecipeDetailMobile({ route, navigation }) {
-    const { startIndex = 0, recipeIds } = route.params;
+    const { startIndex = 0, recipeIds, code } = route.params ?? {};
     const { width } = useWindowDimensions();
     const flatListRef = useRef(null);
-    const [currentIndex, setCurrentIndex] = useState(startIndex);
     const { recipes: allRecipes } = useRecipes();
     const [flaggedIds, setFlaggedIds] = useState(new Set());
 
@@ -98,6 +98,11 @@ export default function RecipeDetailMobile({ route, navigation }) {
         ? recipeIds.map(id => allRecipes.find(r => r.id === id)).filter(Boolean)
         : allRecipes;
 
+    const resolvedIndex = code
+        ? Math.max(0, recipes.findIndex(r => r.code === code))
+        : startIndex;
+
+    const [currentIndex, setCurrentIndex] = useState(resolvedIndex);
     const currentRecipe = recipes[currentIndex];
     const isFlagged = currentRecipe ? flaggedIds.has(currentRecipe.id) : false;
 
@@ -156,6 +161,13 @@ export default function RecipeDetailMobile({ route, navigation }) {
             />
 
             <TouchableOpacity
+                style={styles.whatsappBtn}
+                onPress={() => currentRecipe && shareRecipeOnWhatsApp(currentRecipe)}
+            >
+                <Text style={styles.whatsappIcon}>📲</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
                 style={[styles.flagBtn, isFlagged && styles.flagBtnActive]}
                 onPress={handleToggleFlag}
             >
@@ -182,6 +194,13 @@ const styles = StyleSheet.create({
     },
     flagBtnActive: { backgroundColor: '#2a2000', borderColor: '#FFD700' },
     flagIcon: { fontSize: 22, color: '#FFD700' },
+    whatsappBtn: {
+        position: 'absolute', bottom: 116, right: 20, zIndex: 10,
+        backgroundColor: '#25D366',
+        borderRadius: 24, width: 48, height: 48,
+        justifyContent: 'center', alignItems: 'center',
+    },
+    whatsappIcon: { fontSize: 22 },
     cardScroll: { paddingBottom: 40 },
     content: { padding: 20 },
     titleRow: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 14 },
