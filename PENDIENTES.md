@@ -35,13 +35,13 @@
 
 ### Funciones UX
 - **Modo oscuro / claro** — toggle en el header para cambiar tema
-- **Escalar ingredientes** — slider para 2 / 4 / 6 personas, los gramos se recalculan solos
-- **Compartir receta** — botón para copiar link directo a una receta específica
+- ✅ ~~**Escalar ingredientes** — botones 2p/4p/6p, base 2 personas~~ *(FIX 32)*
+- ✅ ~~**Compartir receta por WhatsApp** — link directo a la receta~~ *(FIX 31)*
 - **Búsqueda por ingrediente** — "¿qué tengo en la nevera?" → recetas que lo usan
 - **Historial de recetas vistas** — las últimas 5 visitadas, acceso rápido
 
 ### Personal / Social
-- **Notas personales por receta** — campo libre para anotar variaciones propias
+- ✅ ~~**Notas personales por receta** — campo libre, guardado en AsyncStorage~~ *(FIX 33)*
 - **Valoración personal** — 1 a 5 estrellas privadas por receta
 - **Fecha de última preparación** — registrar cuándo se cocinó por última vez
 

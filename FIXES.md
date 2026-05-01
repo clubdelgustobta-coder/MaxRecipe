@@ -464,6 +464,55 @@ Reemplaza todos los `<Image>` de recetas y chef. También `getDriveImageSize()` 
 
 ---
 
+## FIX 30 — Deploy en Vercel + dominio público
+**Motivo:** La app no tenía URL pública accesible sin Expo Go.  
+**Solución:** Deploy en Vercel conectado al repo GitHub `MaxRecipe`:
+- `vercel.json` con `buildCommand: "npm run build:web"`, `outputDirectory: "dist"` y rewrite SPA `"/(.*)" → "/index.html"`
+- Script `"build:web": "expo export -p web"` agregado a `package.json`
+- Cada `git push` a `main` redespliega automáticamente
+- URL pública: `https://max-recipe-one.vercel.app`
+
+---
+
+## FIX 31 — Compartir receta por WhatsApp con link directo
+**Feature:** Botón 📲 en RecipeDetailMobile (flotante) que abre WhatsApp con el texto de la receta y un link directo.  
+**Implementación:**
+- `src/utils/share.js` — genera mensaje formateado + URL `APP_URL/recipe/CODE`
+- `src/config/appConfig.js` — constante `APP_URL`
+- Deep linking configurado en `App.js` con `linking` config de React Navigation
+- Vercel rewrite SPA permite que `https://max-recipe-one.vercel.app/recipe/PV01` sirva el `index.html` y navegue a la receta correcta
+- **Solo en Android/iOS** — RecipeDetailWeb no tiene el botón
+
+**Formato del mensaje WhatsApp:**
+```
+🍝 *AL POMODORO* — Club del Gusto
+📅 Sep. 2011 · PV01 | Pasta | Veggie
+_Descripción de la receta..._
+🔗 https://max-recipe-one.vercel.app/recipe/PV01
+```
+
+---
+
+## FIX 32 — Escalar ingredientes por porciones (2/4/6 personas)
+**Feature:** Botones `2p` `4p` `6p` junto al título "Ingredientes" para escalar cantidades.  
+**Base:** 2 personas (cantidades originales del sheet).  
+**Lógica:** `src/utils/scaling.js` — extrae el número inicial de cada ingrediente con regex y multiplica por el factor (2p=×1, 4p=×2, 6p=×3). Ingredientes sin número quedan sin cambio.  
+**Ejemplo:** `280 gr - Pasta Fresca` con 4p → `560 gr - Pasta Fresca`  
+**Aplica en:** `RecipeDetailMobile` (dentro de `RecipeCard`) y `RecipeDetailWeb` (columna derecha).
+
+---
+
+## FIX 33 — Notas personales por receta
+**Feature:** Campo de texto libre al final de cada receta para anotar variaciones personales.  
+**Implementación:**
+- `src/services/notesService.js` — `getNote(code)` y `saveNote(code, text)` con AsyncStorage
+- Clave: `note_${recipe.code}` — independiente por receta
+- Auto-guardado en `onBlur` (al salir del campo)
+- Persiste entre sesiones
+- **Aplica en:** RecipeDetailMobile y RecipeDetailWeb
+
+---
+
 ## Configuración final app.json relevante
 ```json
 {
