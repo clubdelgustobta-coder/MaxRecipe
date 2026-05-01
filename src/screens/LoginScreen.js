@@ -106,19 +106,22 @@ export default function LoginScreen() {
                     }
                 </TouchableOpacity>
 
-                <View style={styles.divider}>
-                    <View style={styles.dividerLine} />
-                    <Text style={styles.dividerText}>¿No tenés acceso?</Text>
-                    <View style={styles.dividerLine} />
-                </View>
-
-                <TouchableOpacity
-                    style={[styles.whatsappBtn, !ADMIN_WHATSAPP && styles.btnDisabled]}
-                    onPress={handleRequestAccess}
-                    disabled={!ADMIN_WHATSAPP}
-                >
-                    <Text style={styles.whatsappBtnText}>💬  Solicitar acceso por WhatsApp</Text>
-                </TouchableOpacity>
+                {Platform.OS !== 'web' && (
+                    <>
+                        <View style={styles.divider}>
+                            <View style={styles.dividerLine} />
+                            <Text style={styles.dividerText}>¿No tenés acceso?</Text>
+                            <View style={styles.dividerLine} />
+                        </View>
+                        <TouchableOpacity
+                            style={[styles.whatsappBtn, !ADMIN_WHATSAPP && styles.btnDisabled]}
+                            onPress={handleRequestAccess}
+                            disabled={!ADMIN_WHATSAPP}
+                        >
+                            <Text style={styles.whatsappBtnText}>💬  Solicitar acceso por WhatsApp</Text>
+                        </TouchableOpacity>
+                    </>
+                )}
             </View>
 
             <Text style={styles.footer}>© 2009 – 2026 Club del Gusto</Text>
