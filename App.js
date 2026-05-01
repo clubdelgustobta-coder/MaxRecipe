@@ -9,6 +9,8 @@ import RecipeListScreen from './src/screens/RecipeListScreen';
 import RecipeDetailScreen from './src/screens/RecipeDetailScreen';
 import ReviewScreen from './src/screens/ReviewScreen';
 import ChefScreen from './src/screens/ChefScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import { onAuthChange } from './src/services/firebaseService';
 import { APP_URL } from './src/config/appConfig';
 
 const linking = {
@@ -57,8 +59,16 @@ function SplashScreen({ onFinish }) {
 export default function App() {
     const [splashDone, setSplashDone] = useState(false);
     const [dataReady, setDataReady] = useState(false);
+    const [user, setUser] = useState(undefined); // undefined = todavía verificando
     const splashTimerDone = useRef(false);
     const dataLoadDone = useRef(false);
+
+    useEffect(() => {
+        const unsub = onAuthChange((u) => setUser(u));
+        // Si Firebase no responde en 5s (ej. dominio no autorizado), mostramos login igual
+        const fallback = setTimeout(() => setUser(prev => prev === undefined ? null : prev), 5000);
+        return () => { unsub(); clearTimeout(fallback); };
+    }, []);
 
     const tryFinish = () => {
         if (splashTimerDone.current && dataLoadDone.current) {
@@ -76,6 +86,25 @@ export default function App() {
         setDataReady(true);
         tryFinish();
     };
+
+    // Aún verificando sesión con Firebase — no mostramos nada todavía
+    if (user === undefined) {
+        return (
+            <SafeAreaProvider>
+                <StatusBar style="light" />
+                <View style={styles.splash} />
+            </SafeAreaProvider>
+        );
+    }
+
+    if (!user) {
+        return (
+            <SafeAreaProvider>
+                <StatusBar style="light" />
+                <LoginScreen />
+            </SafeAreaProvider>
+        );
+    }
 
     return (
         <SafeAreaProvider>

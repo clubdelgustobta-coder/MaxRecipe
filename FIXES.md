@@ -513,6 +513,27 @@ _Descripción de la receta..._
 
 ---
 
+## FIX 34 — Sistema de login con Firebase Authentication
+**Feature:** Pantalla de login con Firebase Auth (email + contraseña) y flujo de solicitud de acceso por WhatsApp.  
+**Archivos creados:**
+- `src/services/firebaseService.js` — inicialización Firebase, `login()`, `logout()`, `onAuthChange()`
+- `src/screens/LoginScreen.js` — UI de login con 3 estados
+**Archivos modificados:**
+- `App.js` — integración de `onAuthChange`; muestra `LoginScreen` si no hay sesión activa
+- `src/screens/RecipeListScreen.js` — botón de logout ⏻ en header
+- `.env` — credenciales Firebase (EXPO_PUBLIC_FIREBASE_*)
+**Flujo:**  
+1. App arranca → verifica sesión Firebase → si no hay usuario activo → muestra LoginScreen  
+2. **Estado login:** email + contraseña → `signInWithEmailAndPassword` → acceso a la app  
+3. **Estado solicitud:** botón "Solicitar acceso por WhatsApp" → abre WhatsApp al admin con mensaje prellenado → muestra "Solicitud enviada"  
+4. Admin habilita al usuario desde la consola Firebase → usuario vuelve y hace login normal  
+5. Botón ⏻ en header → `signOut()` → vuelve a LoginScreen  
+**Env vars necesarias en Vercel:**
+- `EXPO_PUBLIC_ADMIN_WHATSAPP` — número internacional del admin (sin + ni espacios)
+- `EXPO_PUBLIC_FIREBASE_API_KEY`, `AUTH_DOMAIN`, `PROJECT_ID`, `STORAGE_BUCKET`, `MESSAGING_SENDER_ID`, `APP_ID`
+
+---
+
 ## Configuración final app.json relevante
 ```json
 {

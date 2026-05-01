@@ -9,6 +9,7 @@ import { SALSA_COLORS, INGREDIENTE_COLORS } from '../data/recipes';
 import { useRecipes } from '../context/RecipesContext';
 import { getFlaggedIds } from '../services/flagService';
 import DriveImage from '../components/DriveImage';
+import { logout } from '../services/firebaseService';
 
 // Familias fijas — incluye las futuras aunque aún no tengan recetas
 const CATEGORY_OPTIONS = ['Todas', 'Pasta', 'Pasta Rellena', 'Cannelloni', 'Lasagna', 'Risotto'];
@@ -143,8 +144,8 @@ export default function RecipeListScreen({ navigation }) {
                                 </View>
                             )}
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.exitBtn} onPress={() => { if (Platform.OS !== 'web') BackHandler.exitApp(); }}>
-                            <Text style={styles.exitText}>✕</Text>
+                        <TouchableOpacity style={styles.exitBtn} onPress={() => logout()}>
+                            <Text style={styles.exitText}>⏻</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
